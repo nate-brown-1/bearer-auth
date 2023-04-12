@@ -5,6 +5,7 @@ const { users } = require('../models/index.js');
 async function handleSignup(req, res, next) {
   try {
     let userRecord = await users.create(req.body);
+    console.log(userRecord);
     const output = {
       user: userRecord,
       token: userRecord.token
@@ -19,8 +20,8 @@ async function handleSignup(req, res, next) {
 async function handleSignin(req, res, next) {
   try {
     const user = {
-      user: request.user,
-      token: request.user.token
+      user: req.user,
+      token: req.user.token
     };
     res.status(200).json(user);
   } catch (e) {
@@ -31,8 +32,9 @@ async function handleSignin(req, res, next) {
 
 async function handleGetUsers(req, res, next) {
   try {
-    const userRecords = await Users.findAll({});
-    const list = users.map(user => user.username);
+    const userRecords = await users.findAll({});
+    // const list = users.map(user => user.username);
+    const list = userRecords.map(user => user.username);
     res.status(200).json(list);
   } catch (e) {
     console.error(e);
@@ -41,7 +43,7 @@ async function handleGetUsers(req, res, next) {
 }
 
 function handleSecret(req, res, next) {
-  res.status(200).text("Welcome to the secret area!");
+  res.status(200).send("Welcome to the secret area!");
 }
 
 module.exports = {
